@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}CareerPilot - Career Development Platform{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <h1>
+        Build Your
+        <span>Career</span>
+        with CareerPilot
+    </h1>
+
+    <p>
+        CareerPilot helps students build professional profiles,
+        generate resumes, analyze job requirements, identify
+        skill gaps and explore relevant career opportunities.
+    </p>
+
+
+    <div class="hero-buttons">
+
+        {% if current_user.is_authenticated %}
+
+            <a
+                href="{{ url_for('student_dashboard') }}"
+                class="btn btn-primary"
+            >
+                Go to Dashboard
+            </a>
+
+        {% else %}
+
+            <a
+                href="{{ url_for('auth.register') }}"
+                class="btn btn-primary"
+            >
+                Get Started
+            </a>
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="btn btn-outline"
+            >
+                Login
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,66 +1,92 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, render_template
+from flask_login import login_required
+
 from config import Config
 
 from models import db, login_manager
 from models.user import User
 
 from routes.auth import auth
+from routes.student import student
+
 
 
 app = Flask(__name__)
 
 app.config.from_object(Config)
 
+
+# -----------------------------
+# Database
+# -----------------------------
+
 db.init_app(app)
+
+
+# -----------------------------
+# Login Manager
+# -----------------------------
+
 login_manager.init_app(app)
 
 login_manager.login_view = "auth.login"
 
-app.register_blueprint(auth)
 
+# -----------------------------
+# Register Blueprints
+# -----------------------------
+
+app.register_blueprint(auth)
+app.register_blueprint(student)
+
+
+
+# -----------------------------
+# User Loader
+# -----------------------------
 
 @login_manager.user_loader
 def load_user(user_id):
+
     return User.query.get(int(user_id))
 
 
+# -----------------------------
+# Home Page
+# -----------------------------
+
 @app.route("/")
 def home():
-    return """
-    <h1>Welcome to CareerPilot</h1>
 
-    <p>AI-Powered Career Development Platform</p>
+    return render_template("index.html")
 
-    <a href="/register">Register</a>
-    |
-    <a href="/login">Login</a>
-    """
 
+# -----------------------------
+# Student Dashboard
+# -----------------------------
 
 @app.route("/dashboard")
+@login_required
 def student_dashboard():
 
-    from flask_login import login_required, current_user
+    return render_template(
+        "student/dashboard.html"
+    )
 
-    if not current_user.is_authenticated:
-        return redirect(url_for("auth.login"))
 
-    return f"""
-    <h1>CareerPilot Dashboard</h1>
-
-    <h2>Welcome, {current_user.name}!</h2>
-
-    <p>Email: {current_user.email}</p>
-
-    <p>Role: {current_user.role}</p>
-
-    <a href="/logout">Logout</a>
-    """
-
+# -----------------------------
+# Create Database
+# -----------------------------
 
 with app.app_context():
+
     db.create_all()
 
 
+# -----------------------------
+# Run Application
+# -----------------------------
+
 if __name__ == "__main__":
+
     app.run(debug=True)

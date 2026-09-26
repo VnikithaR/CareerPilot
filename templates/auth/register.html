@@ -1,45 +1,102 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CareerPilot - Register</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Register - CareerPilot{% endblock %}
 
-    <h1>CareerPilot</h1>
+{% block content %}
 
-    <h2>Create Account</h2>
+<div class="auth-page">
 
-    <form method="POST">
+    <div class="auth-card">
 
-        <label>Name</label>
-        <br>
-        <input type="text" name="name" required>
+        <div class="auth-logo">
+            <h1>CareerPilot</h1>
+        </div>
 
-        <br><br>
+        <p class="auth-subtitle">
+            Create your student account
+        </p>
 
-        <label>Email</label>
-        <br>
-        <input type="email" name="email" required>
 
-        <br><br>
+        <form method="POST">
 
-        <label>Password</label>
-        <br>
-        <input type="password" name="password" required>
+            <div class="form-group">
 
-        <br><br>
+                <label for="name">
+                    Full Name
+                </label>
 
-        <button type="submit">
-            Register
-        </button>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter your full name"
+                    required
+                >
 
-    </form>
+            </div>
 
-    <p>
-        Already have an account?
-        <a href="/login">Login</a>
-    </p>
 
-</body>
-</html>
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Create a password"
+                    minlength="6"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-block"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <div class="auth-footer">
+
+            <p>
+                Already have an account?
+                <a href="{{ url_for('auth.login') }}">
+                    Login
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

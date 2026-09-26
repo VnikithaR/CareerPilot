@@ -1,39 +1,82 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CareerPilot - Login</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Login - CareerPilot{% endblock %}
 
-    <h1>CareerPilot</h1>
+{% block content %}
 
-    <h2>Login</h2>
+<div class="auth-page">
 
-    <form method="POST">
+    <div class="auth-card">
 
-        <label>Email</label>
-        <br>
-        <input type="email" name="email" required>
+        <div class="auth-logo">
+            <h1>CareerPilot</h1>
+        </div>
 
-        <br><br>
+        <p class="auth-subtitle">
+            Sign in to continue your career journey
+        </p>
 
-        <label>Password</label>
-        <br>
-        <input type="password" name="password" required>
+        <form method="POST">
 
-        <br><br>
+            <div class="form-group">
 
-        <button type="submit">
-            Login
-        </button>
+                <label for="email">
+                    Email Address
+                </label>
 
-    </form>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    required
+                >
 
-    <p>
-        Don't have an account?
-        <a href="/register">Register</a>
-    </p>
+            </div>
 
-</body>
-</html>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-block"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <div class="auth-footer">
+
+            <p>
+                Don't have an account?
+                <a href="{{ url_for('auth.register') }}">
+                    Create an account
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
