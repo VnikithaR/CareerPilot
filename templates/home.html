@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CareerPilot | Build Your Future</title>
+    <meta name="description"
+          content="Build your resume, discover career opportunities, analyze job skills and prepare for placements with CareerPilot.">
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Project CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+            <span class="brand-icon">
+                <i class="fa-solid fa-compass"></i>
+            </span>
+            Career<span>Pilot</span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#how-it-works">How It Works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions d-flex gap-2">
+                <a href="{{ url_for('login') }}"
+                   class="btn btn-login">Login</a>
+                <a href="{{ url_for('register') }}"
+                   class="btn btn-primary-custom">Get Started</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- HERO SECTION -->
+<section class="hero-section" id="home">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-7">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-sparkles"></i>
+                    Your career journey starts here
+                </div>
+
+                <h1>
+                    Your Future.<br>
+                    Your Skills.<br>
+                    <span class="gradient-text">Your Career.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Prepare for your dream job with one intelligent platform.
+                    Build professional resumes, discover suitable jobs,
+                    identify missing skills and take the next step in your career.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="{{ url_for('register') }}"
+                       class="btn btn-primary-custom btn-lg">
+                        Get Started Free
+                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+
+                    <a href="#features"
+                       class="btn btn-outline-custom btn-lg">
+                        Explore Features
+                    </a>
+                </div>
+
+                <div class="hero-note">
+                    <i class="fa-solid fa-circle-check"></i>
+                    One platform for your career preparation
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE CAREER CARD -->
+            <div class="col-lg-5">
+                <div class="career-card">
+                    <div class="card-top">
+                        <div>
+                            <p class="small-label">YOUR CAREER JOURNEY</p>
+                            <h4>Prepare with confidence</h4>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="career-feature">
+                        <div class="feature-icon purple">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <div>
+                            <h6>Resume Builder</h6>
+                            <p>Create and download your resume</p>
+                        </div>
+                        <i class="fa-solid fa-check-circle check-icon"></i>
+                    </div>
+
+                    <div class="career-feature">
+                        <div class="feature-icon blue">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <div>
+                            <h6>Job Skill Analysis</h6>
+                            <p>Discover skill matches and gaps</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right arrow-icon"></i>
+                    </div>
+
+                    <div class="career-feature">
+                        <div class="feature-icon green">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+                        <div>
+                            <h6>Career Recommendations</h6>
+                            <p>Explore roles suited to your skills</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right arrow-icon"></i>
+                    </div>
+
+                    <div class="career-card-footer">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        Small steps today. Better opportunities tomorrow.
+                    </div>
+                </div>
+
+                <div class="floating-tag tag-one">
+                    <i class="fa-solid fa-file-pdf"></i> Resume Ready
+                </div>
+
+                <div class="floating-tag tag-two">
+                    <i class="fa-solid fa-bullseye"></i> Find Your Direction
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FEATURES SECTION -->
+<section class="features-section section-padding" id="features">
+    <div class="container">
+
+        <div class="section-heading text-center">
+            <span class="section-label">WHAT YOU CAN DO</span>
+            <h2>Everything you need to <span>move forward</span></h2>
+            <p>
+                Prepare for placements with practical tools that help
+                you understand your skills and career opportunities.
+            </p>
+        </div>
+
+        <div class="row g-4 mt-3">
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon purple">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h5>Smart Resume Builder</h5>
+                    <p>
+                        Create a professional resume using your education,
+                        skills, projects and experience. Download it as a PDF.
+                    </p>
+                    <a href="{{ url_for('register') }}" class="feature-link">
+                        Create your resume <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon blue">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <h5>Explore Job Opportunities</h5>
+                    <p>
+                        Browse available jobs, understand their requirements
+                        and discover opportunities that match your interests.
+                    </p>
+                    <a href="{{ url_for('register') }}" class="feature-link">
+                        Explore opportunities <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon orange">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h5>AI-Powered Skill Analysis</h5>
+                    <p>
+                        Compare your existing skills with job requirements
+                        and identify the skills you may need to improve.
+                    </p>
+                    <a href="{{ url_for('register') }}" class="feature-link">
+                        Analyze your skills <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon green">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <h5>Career Recommendations</h5>
+                    <p>
+                        Explore career roles based on your skills and
+                        understand what you can learn to prepare for them.
+                    </p>
+                    <a href="{{ url_for('register') }}" class="feature-link">
+                        Discover career paths <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon pink">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <h5>Placement Tracking</h5>
+                    <p>
+                        Keep track of your job applications and follow
+                        application and interview status updates.
+                    </p>
+                    <a href="{{ url_for('register') }}" class="feature-link">
+                        Track applications <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon teal">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h5>Student Profile</h5>
+                    <p>
+                        Organize your education, technical skills, projects,
+                        internships and certifications in one place.
+                    </p>
+                    <a href="{{ url_for('register') }}" class="feature-link">
+                        Build your profile <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="how-section section-padding" id="how-it-works">
+    <div class="container">
+
+        <div class="section-heading text-center">
+            <span class="section-label">GETTING STARTED</span>
+            <h2>Your career journey in <span>three steps</span></h2>
+            <p>Start with your profile and build from there.</p>
+        </div>
+
+        <div class="row g-4 mt-3">
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <h5>Create Your Profile</h5>
+                    <p>
+                        Register and add your education, skills,
+                        projects and certifications.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    </div>
+                    <h5>Explore and Analyze</h5>
+                    <p>
+                        Discover jobs, compare skill requirements
+                        and explore suitable career paths.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <h5>Prepare and Progress</h5>
+                    <p>
+                        Improve your resume, develop missing skills
+                        and track your job applications.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ABOUT / CTA -->
+<section class="cta-section section-padding" id="about">
+    <div class="container">
+        <div class="cta-box">
+            <div class="cta-content">
+                <span class="section-label">YOUR NEXT CHAPTER STARTS HERE</span>
+                <h2>Ready to take the next step in your career?</h2>
+                <p>
+                    Build your profile, understand your strengths and
+                    prepare for the opportunities ahead.
+                </p>
+                <a href="{{ url_for('register') }}"
+                   class="btn btn-light btn-lg cta-button">
+                    Create Your Free Account
+                    <i class="fa-solid fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+            <div class="cta-decoration">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <a class="navbar-brand footer-brand"
+                   href="{{ url_for('home') }}">
+                    <span class="brand-icon">
+                        <i class="fa-solid fa-compass"></i>
+                    </span>
+                    Career<span>Pilot</span>
+                </a>
+                <p class="footer-description">
+                    A student-focused platform for resume creation,
+                    job skill analysis and career preparation.
+                </p>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <h6>Explore</h6>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#about">About Us</a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <h6>Account</h6>
+                <a href="{{ url_for('register') }}">Register</a>
+                <a href="{{ url_for('login') }}">Login</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                &copy; <span id="currentYear"></span> CareerPilot.
+                MCA Academic Project.
+            </p>
+            <a href="#home">Back to top ↑</a>
+        </div>
+    </div>
+</footer>
+
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Project JavaScript -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>

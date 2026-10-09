@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | CareerPilot</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+
+        <a href="{{ url_for('home') }}" class="sidebar-brand">
+            <span class="brand-icon">
+                <i class="fa-solid fa-compass"></i>
+            </span>
+            <span>Career<span class="brand-highlight">Pilot</span></span>
+        </a>
+
+        <div class="sidebar-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+
+            <a class="sidebar-link active" href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('student_profile') }}">
+                <i class="fa-regular fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('student_feature', feature='resume') }}">
+                <i class="fa-regular fa-file-lines"></i>
+                <span>Resume Builder</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('explore_jobs') }}">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Explore Jobs</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('student_feature', feature='analyzer') }}">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Skill Analyzer</span>
+            </a>
+
+            <!-- Career Recommendations -->
+            <a class="sidebar-link"
+               href="{{ url_for('career_recommendations') }}">
+                <i class="fa-solid fa-route"></i>
+                <span>Career Recommendations</span>
+            </a>
+
+            <!-- My Applications -->
+            <a class="sidebar-link"
+               href="{{ url_for('my_applications') }}">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>My Applications</span>
+            </a>
+
+            
+<!-- My Notifications -->
+<a class="sidebar-link"
+   href="{{ url_for('student_notifications') }}">
+    <i class="fa-solid fa-bell"></i>
+    <span>My Notifications</span>
+
+    {% if unread_notifications > 0 %}
+        <span class="badge bg-danger">
+            {{ unread_notifications }}
+        </span>
+    {% endif %}
+</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-help">
+                <i class="fa-regular fa-circle-question"></i>
+                <div>
+                    <strong>Need help?</strong>
+                    <small>CareerPilot student portal</small>
+                </div>
+            </div>
+
+            <a class="sidebar-link logout-link" href="{{ url_for('logout') }}">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Log out</span>
+            </a>
+
+        </div>
+    </aside>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+
+        <header class="dashboard-topbar">
+
+            <button class="sidebar-toggle"
+                    id="sidebarToggle"
+                    aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="topbar-heading">
+                <span class="topbar-eyebrow">STUDENT WORKSPACE</span>
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="topbar-user">
+                <div class="user-avatar">
+                    {{ current_user.full_name[0]|upper }}
+                </div>
+
+                <div class="user-details">
+                    <strong>{{ current_user.full_name }}</strong>
+                    <small>Student Account</small>
+                </div>
+            </div>
+
+        </header>
+
+        <section class="dashboard-content">
+
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+
+                <div class="welcome-copy">
+
+                    <span class="welcome-tag">
+                        <i class="fa-solid fa-sparkles"></i>
+                        YOUR CAREER JOURNEY
+                    </span>
+
+                    <h2>Welcome back, {{ current_user.full_name }}!</h2>
+
+                    <p>
+                        Build your profile, improve your resume, discover job
+                        opportunities, and take the next step toward your career.
+                    </p>
+
+                    <a href="{{ url_for('student_profile') }}"
+                       class="welcome-button">
+                        Complete My Profile
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="welcome-illustration">
+                    <div class="illustration-circle">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+
+                    <div class="floating-icon floating-icon-one">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+
+                    <div class="floating-icon floating-icon-two">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Career Overview -->
+            <div class="section-heading">
+                <div>
+                    <h2>Your Career Overview</h2>
+                    <p>Quick access to your career development tools.</p>
+                </div>
+            </div>
+
+            <div class="overview-grid">
+
+                <!-- Student Profile -->
+                <a href="{{ url_for('student_profile') }}"
+                   class="overview-card">
+
+                    <div class="overview-icon purple-icon">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+
+                    <div class="overview-text">
+                        <span>Student Profile</span>
+                        <strong>Build your profile</strong>
+                        <small>Add your education and skills</small>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+                </a>
+
+                <!-- Resume Builder -->
+                <a href="{{ url_for('student_feature', feature='resume') }}"
+                   class="overview-card">
+
+                    <div class="overview-icon blue-icon">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+
+                    <div class="overview-text">
+                        <span>Resume Builder</span>
+                        <strong>Create your resume</strong>
+                        <small>Prepare a professional resume</small>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+                </a>
+
+                <!-- Job Opportunities -->
+                <a href="{{ url_for('explore_jobs') }}"
+                   class="overview-card">
+
+                    <div class="overview-icon green-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div class="overview-text">
+                        <span>Job Opportunities</span>
+                        <strong>Explore available jobs</strong>
+                        <small>Find roles that suit your skills</small>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+                </a>
+
+                <!-- Skill Analyzer -->
+                <a href="{{ url_for('student_feature', feature='analyzer') }}"
+                   class="overview-card">
+
+                    <div class="overview-icon orange-icon">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+
+                    <div class="overview-text">
+                        <span>Skill Analyzer</span>
+                        <strong>Analyze your skills</strong>
+                        <small>Identify skills to improve</small>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+                </a>
+
+                <!-- Career Recommendations -->
+                <a href="{{ url_for('career_recommendations') }}"
+                   class="overview-card">
+
+                    <div class="overview-icon purple-icon">
+                        <i class="fa-solid fa-route"></i>
+                    </div>
+
+                    <div class="overview-text">
+                        <span>Career Recommendations</span>
+                        <strong>Discover your career path</strong>
+                        <small>Find suitable roles and skills to learn</small>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+                </a>
+
+                <!-- My Applications -->
+                <a href="{{ url_for('my_applications') }}"
+                   class="overview-card">
+
+                    <div class="overview-icon blue-icon">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+
+                    <div class="overview-text">
+                        <span>My Applications</span>
+                        <strong>Track your applications</strong>
+                        <small>View jobs saved to your application tracker</small>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+                </a>
+
+            </div>
+
+            <!-- Recommended Next Steps -->
+            <div class="section-heading next-steps-heading">
+                <div>
+                    <h2>Recommended Next Steps</h2>
+                    <p>Start with these actions to prepare for your career.</p>
+                </div>
+            </div>
+
+            <div class="next-steps-list">
+
+                <!-- Step 1 -->
+                <a href="{{ url_for('student_profile') }}"
+                   class="next-step">
+
+                    <div class="step-number">01</div>
+
+                    <div class="step-content">
+                        <strong>Complete your student profile</strong>
+                        <p>
+                            Add your education, technical skills, projects,
+                            and certifications.
+                        </p>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <!-- Step 2 -->
+                <a href="{{ url_for('student_feature', feature='resume') }}"
+                   class="next-step">
+
+                    <div class="step-number">02</div>
+
+                    <div class="step-content">
+                        <strong>Create a professional resume</strong>
+                        <p>
+                            Organize your qualifications into a resume
+                            you can download.
+                        </p>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+                <!-- Step 3 -->
+                <a href="{{ url_for('career_recommendations') }}"
+                   class="next-step">
+
+                    <div class="step-number">03</div>
+
+                    <div class="step-content">
+                        <strong>Discover suitable career paths</strong>
+                        <p>
+                            Explore recommended roles, compare your skills,
+                            and identify areas to improve.
+                        </p>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+
+            </div>
+
+            <!-- Footer -->
+            <footer class="dashboard-footer">
+                <span>
+                    © <span id="currentYear"></span> CareerPilot
+                </span>
+                <span>Plan your skills. Prepare your future.</span>
+            </footer>
+
+        </section>
+    </main>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+<script>
+    const yearElement = document.getElementById("currentYear");
+
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+</script>
+
+</body>
+</html>

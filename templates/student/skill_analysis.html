@@ -1,0 +1,202 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Skill Analysis | CareerPilot</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold"
+           href="{{ url_for('dashboard') }}">
+            CareerPilot
+        </a>
+
+        <div class="d-flex gap-3">
+            <a class="nav-link text-white"
+               href="{{ url_for('explore_jobs') }}">
+                Explore Jobs
+            </a>
+            <a class="nav-link text-white"
+               href="{{ url_for('logout') }}">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+
+    <a href="{{ url_for('job_details', job_id=job['id']) }}"
+       class="text-decoration-none">
+        &larr; Back to Job Details
+    </a>
+
+    <div class="mt-4 mb-4">
+        <h1 class="fw-bold">Skill Matching Analysis</h1>
+        <p class="text-muted">
+            Compare your profile skills with the selected job requirements.
+        </p>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <h2 class="h4 fw-bold">{{ job["title"] }}</h2>
+            <p class="text-primary fw-semibold mb-0">
+                {{ job["company"] }}
+            </p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 text-center">
+
+            <p class="text-muted mb-2">Your Skill Match</p>
+
+            <h2 class="display-3 fw-bold
+                {% if match_percentage >= 70 %}
+                    text-success
+                {% elif match_percentage >= 40 %}
+                    text-warning
+                {% else %}
+                    text-danger
+                {% endif %}">
+                {{ match_percentage }}%
+            </h2>
+
+            <div class="progress mt-3" style="height: 14px;">
+                <div
+                    class="progress-bar
+                    {% if match_percentage >= 70 %}
+                        bg-success
+                    {% elif match_percentage >= 40 %}
+                        bg-warning
+                    {% else %}
+                        bg-danger
+                    {% endif %}"
+                    role="progressbar"
+                    data-width="{{ match_percentage }}"
+                    aria-valuenow="{{ match_percentage }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+            </div>
+
+            <p class="text-muted mt-3 mb-0">
+                Matched {{ matched_skills|length }}
+                out of {{ required_skills|length }}
+                required skills.
+            </p>
+
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="h5 text-success fw-bold">
+                        Matched Skills
+                    </h3>
+
+                    {% if matched_skills %}
+                        <ul class="list-group list-group-flush mt-3">
+                            {% for skill in matched_skills %}
+                                <li class="list-group-item px-0">
+                                    <span class="text-success">&#10003;</span>
+                                    {{ skill|title }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mt-3">
+                            No matching skills found yet.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="h5 text-danger fw-bold">
+                        Skills to Improve
+                    </h3>
+
+                    {% if missing_skills %}
+                        <ul class="list-group list-group-flush mt-3">
+                            {% for skill in missing_skills %}
+                                <li class="list-group-item px-0">
+                                    <span class="text-danger">&#8226;</span>
+                                    {{ skill|title }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-success mt-3">
+                            You have all the listed required skills!
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {% if not student_skills %}
+        <div class="alert alert-info mt-4">
+            <strong>Complete your profile:</strong>
+            No skills were found in your student profile.
+            Add your technical skills to your profile and run this
+            analysis again.
+            <a href="{{ url_for('student_profile') }}"
+               class="alert-link">
+                Update My Profile
+            </a>
+        </div>
+    {% endif %}
+
+    {% if not required_skills %}
+        <div class="alert alert-warning mt-4">
+            This job does not have any required skills listed.
+            Ask the administrator to update the job requirements.
+            The displayed match percentage is 0% because there are
+            no requirements to compare.
+        </div>
+    {% endif %}
+
+    <div class="mt-4 d-flex flex-wrap gap-2">
+        <a href="{{ url_for('explore_jobs') }}"
+           class="btn btn-primary">
+            Explore More Jobs
+        </a>
+
+        <a href="{{ url_for('student_profile') }}"
+           class="btn btn-outline-secondary">
+            Update My Profile
+        </a>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+```

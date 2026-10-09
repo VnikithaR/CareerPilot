@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resume Builder | CareerPilot</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/resume.css') }}">
+</head>
+
+<body class="resume-page">
+
+<header class="resume-topbar">
+    <a href="{{ url_for('dashboard') }}" class="resume-brand">
+        <span class="resume-brand-icon">
+            <i class="fa-solid fa-compass"></i>
+        </span>
+        Career<span>Pilot</span>
+    </a>
+
+    <a href="{{ url_for('dashboard') }}" class="resume-back">
+        <i class="fa-solid fa-arrow-left"></i> Dashboard
+    </a>
+</header>
+
+<main class="resume-container">
+
+    <section class="resume-intro">
+        <div>
+            <span class="resume-eyebrow">CAREERPILOT TOOLKIT</span>
+            <h1>Professional Resume Builder</h1>
+            <p>
+                Enter your details once and generate a resume inspired by
+                your preferred academic LaTeX format.
+            </p>
+        </div>
+        <div class="resume-intro-icon">
+            <i class="fa-solid fa-file-lines"></i>
+        </div>
+    </section>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert
+                    {% if category == 'success' %}alert-success
+                    {% else %}alert-danger{% endif %}
+                    alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="resume-notice">
+        <i class="fa-solid fa-circle-info"></i>
+        Fields marked optional can be left blank. Empty sections will not
+        appear in your generated resume.
+    </div>
+
+    <form method="POST" action="{{ url_for('resume_builder') }}">
+
+        <!-- Personal information -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">01</span>
+                <div>
+                    <h2>Personal Information</h2>
+                    <p>Your account name and email are filled in automatically.</p>
+                </div>
+            </div>
+
+            <div class="resume-form-grid">
+                <div class="resume-field">
+                    <label>Full Name</label>
+                    <input class="form-control"
+                           value="{{ current_user.full_name }}" readonly>
+                </div>
+
+                <div class="resume-field">
+                    <label>Email Address</label>
+                    <input class="form-control"
+                           value="{{ current_user.email }}" readonly>
+                </div>
+
+                <div class="resume-field">
+                    <label for="professional_title">Professional Title / Degree *</label>
+                    <input class="form-control" id="professional_title"
+                           name="professional_title" required maxlength="150"
+                           value="{{ data.get('professional_title', '') }}"
+                           placeholder="e.g. Master of Computer Applications">
+                </div>
+
+                <div class="resume-field">
+                    <label for="phone">Phone Number</label>
+                    <input class="form-control" id="phone" name="phone"
+                           maxlength="30"
+                           value="{{ data.get('phone', '') }}"
+                           placeholder="+91-XXXXXXXXXX">
+                </div>
+
+                <div class="resume-field">
+                    <label for="location">Location</label>
+                    <input class="form-control" id="location" name="location"
+                           maxlength="150"
+                           value="{{ data.get('location', '') }}"
+                           placeholder="City, State, Country">
+                </div>
+
+                <div class="resume-field">
+                    <label for="linkedin">LinkedIn URL</label>
+                    <input class="form-control" id="linkedin" name="linkedin"
+                           maxlength="300"
+                           value="{{ data.get('linkedin', '') }}"
+                           placeholder="linkedin.com/in/your-profile">
+                </div>
+
+                <div class="resume-field full-width">
+                    <label for="professional_summary">Professional Summary</label>
+                    <textarea class="form-control" id="professional_summary"
+                              name="professional_summary" rows="3"
+                              maxlength="12000"
+                              placeholder="Briefly describe your experience, interests, strengths, and career goals.">{{ data.get('professional_summary', '') }}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">02</span>
+                <div>
+                    <h2>Education</h2>
+                    <p>Add one qualification per line using the format below.</p>
+                </div>
+            </div>
+
+            <div class="resume-field">
+                <label for="education">Education Details</label>
+                <textarea class="form-control" id="education" name="education"
+                          rows="4" maxlength="12000"
+                          placeholder="MCA | Computer Applications | Your College | 2026-2028 | 8.5 CGPA&#10;BCA | Computer Applications | Previous College | 2023-2026 | 8.2 CGPA">{{ data.get('education', '') }}</textarea>
+                <small>
+                    Format: Degree | Specialization | Institute | Year | CGPA / Percentage.
+                    Separate each qualification with a new line.
+                </small>
+            </div>
+        </section>
+
+        <!-- Experience -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">03</span>
+                <div>
+                    <h2>Work Experience</h2>
+                    <p>Include internships, training, and professional experience.</p>
+                </div>
+            </div>
+
+            <div class="resume-field">
+                <label for="experience">Experience Entries</label>
+                <textarea class="form-control" id="experience" name="experience"
+                          rows="5" maxlength="12000"
+                          placeholder="Cloud Computing Intern — Sonata Software | Nov 2024–Present&#10;Completed a 180-hour cloud computing training program.&#10;Worked with AWS, Docker, Kubernetes, and cloud databases.&#10;&#10;Second Role — Organization | Dates&#10;Describe your responsibilities and achievements.">{{ data.get('experience', '') }}</textarea>
+                <small>
+                    For each entry, put the role, organization, and dates on the
+                    first line. Put achievements on the following lines. Leave a
+                    blank line between entries.
+                </small>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">04</span>
+                <div>
+                    <h2>Projects</h2>
+                    <p>Highlight academic and personal projects.</p>
+                </div>
+            </div>
+
+            <div class="resume-field">
+                <label for="projects">Project Entries</label>
+                <textarea class="form-control" id="projects" name="projects"
+                          rows="5" maxlength="12000"
+                          placeholder="Meal Magic | Dec 2024–Present&#10;Developed a recipe application using PHP and a database.&#10;Implemented recipe search and meal planning.&#10;&#10;Personal Portfolio Website | Jan 2025–Feb 2025&#10;Created a portfolio website using HTML, CSS, and JavaScript.">{{ data.get('projects', '') }}</textarea>
+                <small>
+                    First line is the project title and dates; following lines
+                    describe your contribution. Separate projects with a blank line.
+                </small>
+            </div>
+        </section>
+
+        <!-- Leadership -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">05</span>
+                <div>
+                    <h2>Positions of Responsibility</h2>
+                    <p>Leadership roles, volunteering, and college responsibilities.</p>
+                </div>
+            </div>
+
+            <div class="resume-field">
+                <label for="positions">Leadership Entries</label>
+                <textarea class="form-control" id="positions" name="positions"
+                          rows="4" maxlength="12000"
+                          placeholder="Event Coordinator — Cultural Club | College Name | Dates&#10;Organized college events and coordinated volunteers.&#10;Managed event logistics and communication.">{{ data.get('positions', '') }}</textarea>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">06</span>
+                <div>
+                    <h2>Achievements and Activities</h2>
+                    <p>Awards, competitions, research, and extracurricular activities.</p>
+                </div>
+            </div>
+
+            <div class="resume-field">
+                <label for="achievements">Achievements</label>
+                <textarea class="form-control" id="achievements"
+                          name="achievements" rows="3" maxlength="12000"
+                          placeholder="Won first place in a college-level competition.&#10;Presented a research paper at a student seminar.">{{ data.get('achievements', '') }}</textarea>
+                <small>Enter one achievement per line.</small>
+            </div>
+        </section>
+
+        <!-- Certifications -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">07</span>
+                <div>
+                    <h2>Certifications</h2>
+                    <p>Training programs, certificates, and workshops.</p>
+                </div>
+            </div>
+
+            <div class="resume-field">
+                <label for="certifications">Certification Entries</label>
+                <textarea class="form-control" id="certifications"
+                          name="certifications" rows="3" maxlength="12000"
+                          placeholder="Java Training Certificate — Spoken Tutorial | Jan 2024&#10;Ethical Hacking Workshop — CourseSeekho | Feb 2025">{{ data.get('certifications', '') }}</textarea>
+                <small>Enter one certification per line.</small>
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="resume-form-section">
+            <div class="resume-section-title">
+                <span class="resume-step">08</span>
+                <div>
+                    <h2>Technical Skills</h2>
+                    <p>Organize your skills into categories like the supplied resume.</p>
+                </div>
+            </div>
+
+            <div class="resume-form-grid">
+                <div class="resume-field full-width">
+                    <label for="languages">Languages / Technical Skills</label>
+                    <textarea class="form-control" id="languages"
+                              name="languages" rows="2" maxlength="12000"
+                              placeholder="Python, Java, SQL, HTML, CSS, JavaScript">{{ data.get('languages', '') }}</textarea>
+                </div>
+
+                <div class="resume-field full-width">
+                    <label for="cloud_technologies">Cloud Technologies</label>
+                    <textarea class="form-control" id="cloud_technologies"
+                              name="cloud_technologies" rows="2" maxlength="12000"
+                              placeholder="AWS, Docker, Kubernetes, CI/CD">{{ data.get('cloud_technologies', '') }}</textarea>
+                </div>
+
+                <div class="resume-field full-width">
+                    <label for="tools">Tools</label>
+                    <textarea class="form-control" id="tools" name="tools"
+                              rows="2" maxlength="12000"
+                              placeholder="GitHub, Excel, Jenkins, Power BI">{{ data.get('tools', '') }}</textarea>
+                </div>
+
+                <div class="resume-field full-width">
+                    <label for="soft_skills">Soft Skills</label>
+                    <textarea class="form-control" id="soft_skills"
+                              name="soft_skills" rows="2" maxlength="12000"
+                              placeholder="Teamwork, communication, problem-solving, adaptability">{{ data.get('soft_skills', '') }}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <div class="resume-download-panel">
+            <div>
+                <strong>Ready to create your resume?</strong>
+                <p>Choose your preferred download format.</p>
+            </div>
+
+            <div class="resume-download-actions">
+                <button type="submit" name="download_format" value="pdf"
+                        class="resume-download-button">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Download PDF
+                </button>
+
+                <button type="submit" name="download_format" value="png"
+                        class="resume-image-button">
+                    <i class="fa-solid fa-image"></i>
+                    Download PNG
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+    <footer class="resume-footer">
+        CareerPilot — Plan your skills. Prepare your future.
+    </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

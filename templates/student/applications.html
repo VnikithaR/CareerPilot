@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - CareerPilot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>My Applications</h2>
+            <p class="text-muted">Track the jobs you have applied for.</p>
+        </div>
+        <a href="{{ url_for('explore_jobs') }}" class="btn btn-primary">
+            Explore Jobs
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<div class="alert alert-info">
+    <strong>Application Tracker</strong>
+    <p class="mb-0">
+        Monitor your application progress here. Status changes are managed
+        by the CareerPilot administrator.
+    </p>
+</div>
+
+    {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover bg-white align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Date Tracked</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application['title'] }}</td>
+                        <td>{{ application['company'] }}</td>
+                        <td>{{ application['location'] }}</td>
+                        
+<td>
+    {% if application['status'] == 'Selected' %}
+        <span class="badge bg-success">Selected</span>
+    {% elif application['status'] == 'Rejected' %}
+        <span class="badge bg-danger">Rejected</span>
+    {% elif application['status'] == 'Interview' %}
+        <span class="badge bg-info text-dark">Interview</span>
+    {% elif application['status'] == 'Shortlisted' %}
+        <span class="badge bg-warning text-dark">Shortlisted</span>
+    {% else %}
+        <span class="badge bg-primary">Applied</span>
+    {% endif %}
+
+    <div class="mt-2 small text-muted">
+        {% if application['status'] == 'Applied' %}
+            Application recorded.
+        {% elif application['status'] == 'Shortlisted' %}
+            Your application has been shortlisted.
+        {% elif application['status'] == 'Interview' %}
+            Your application has reached the interview stage.
+        {% elif application['status'] == 'Selected' %}
+            Congratulations! You have been selected.
+        {% elif application['status'] == 'Rejected' %}
+            This application was marked as rejected.
+        {% endif %}
+    </div>
+</td>
+                        <td>{{ application['applied_at'] }}</td>
+                        <td>
+                            <a href="{{ url_for('job_details', job_id=application['job_id']) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                View Job
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h5>No applications tracked yet</h5>
+                <p class="text-muted">
+                    Explore jobs and click "Track My Application" to add one here.
+                </p>
+                <a href="{{ url_for('explore_jobs') }}" class="btn btn-primary">
+                    Find Jobs
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary mt-3">
+        Back to Dashboard
+    </a>
+</div>
+
+</body>
+</html>

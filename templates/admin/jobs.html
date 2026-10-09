@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Job Management | CareerPilot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold"
+           href="{{ url_for('admin_dashboard') }}">CareerPilot Admin</a>
+        <div class="d-flex gap-3">
+            <a class="nav-link text-white"
+               href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a class="nav-link text-white"
+               href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Job Management</h1>
+        <p class="text-muted">
+            Add vacancies, update job details, or remove outdated listings.
+        </p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert
+                {% if category == 'success' %}alert-success
+                {% else %}alert-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-white py-3">
+            <h2 class="h5 mb-0">
+                {% if edit_job %}Edit Job Listing{% else %}Add a New Job{% endif %}
+            </h2>
+        </div>
+
+        <div class="card-body p-4">
+            <form method="POST"
+                  action="{% if edit_job %}{{ url_for('admin_edit_job', job_id=edit_job['id']) }}{% else %}{{ url_for('admin_jobs') }}{% endif %}">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Job Title *</label>
+                        <input class="form-control" id="title" name="title"
+                               maxlength="150" required
+                               value="{{ edit_job['title'] if edit_job else '' }}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="company" class="form-label">Company *</label>
+                        <input class="form-control" id="company" name="company"
+                               maxlength="150" required
+                               value="{{ edit_job['company'] if edit_job else '' }}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="location" class="form-label">Location</label>
+                        <input class="form-control" id="location" name="location"
+                               maxlength="150" placeholder="e.g. Bengaluru / Remote"
+                               value="{{ edit_job['location'] if edit_job else '' }}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="job_type" class="form-label">Job Type</label>
+                        <select class="form-select" id="job_type" name="job_type">
+                            {% for option in ['Full-time', 'Part-time', 'Internship', 'Contract', 'Remote'] %}
+                                <option value="{{ option }}"
+                                    {% if edit_job and edit_job['job_type'] == option %}selected
+                                    {% elif not edit_job and option == 'Full-time' %}selected
+                                    {% endif %}>
+                                    {{ option }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="experience" class="form-label">Experience</label>
+                        <input class="form-control" id="experience" name="experience"
+                               maxlength="100" placeholder="e.g. Fresher, 0–2 years"
+                               value="{{ edit_job['experience'] if edit_job else 'Fresher' }}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="salary" class="form-label">Salary</label>
+                        <input class="form-control" id="salary" name="salary"
+                               maxlength="100" placeholder="e.g. ₹3–5 LPA"
+                               value="{{ edit_job['salary'] if edit_job else '' }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="skills_required" class="form-label">
+                            Required Skills
+                        </label>
+                        <textarea class="form-control" id="skills_required"
+                                  name="skills_required" rows="2" maxlength="2000"
+                                  placeholder="Python, SQL, Flask, communication">{{ edit_job['skills_required'] if edit_job else '' }}</textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="description" class="form-label">
+                            Job Description
+                        </label>
+                        <textarea class="form-control" id="description"
+                                  name="description" rows="4" maxlength="10000"
+                                  placeholder="Responsibilities, qualifications and job details">{{ edit_job['description'] if edit_job else '' }}</textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="application_url" class="form-label">
+                            Application URL
+                        </label>
+                        <input type="url" class="form-control"
+                               id="application_url" name="application_url"
+                               maxlength="1000" placeholder="https://example.com/apply"
+                               value="{{ edit_job['application_url'] if edit_job else '' }}">
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            {% if edit_job %}Save Changes{% else %}Add Job{% endif %}
+                        </button>
+
+                        {% if edit_job %}
+                            <a href="{{ url_for('admin_jobs') }}"
+                               class="btn btn-outline-secondary">Cancel</a>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4 mb-0">Existing Job Listings</h2>
+            <span class="badge text-bg-secondary">{{ jobs|length }} jobs</span>
+        </div>
+
+        {% if jobs %}
+            <div class="table-responsive card shadow-sm border-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Job</th>
+                            <th>Location</th>
+                            <th>Experience</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                            <tr>
+                                <td>
+                                    <strong>{{ job['title'] }}</strong><br>
+                                    <span class="text-muted small">
+                                        {{ job['company'] }}
+                                    </span>
+                                </td>
+                                <td>{{ job['location'] or 'Not specified' }}</td>
+                                <td>{{ job['experience'] or 'Not specified' }}</td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           href="{{ url_for('admin_edit_job', job_id=job['id']) }}">
+                                            Edit
+                                        </a>
+
+                                        <form method="POST"
+                                              action="{{ url_for('admin_delete_job', job_id=job['id']) }}"
+                                              onsubmit="return confirm('Delete this job listing?');">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="card card-body text-center py-5">
+                <h3 class="h5">No job listings yet</h3>
+                <p class="text-muted mb-0">
+                    Use the form above to add your first vacancy.
+                </p>
+            </div>
+        {% endif %}
+    </section>
+
+</main>
+</body>
+</html>

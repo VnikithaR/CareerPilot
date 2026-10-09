@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Career Recommendations | CareerPilot</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body class="bg-light">
+
+{% if predicted_career %}
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+            <div class="me-3 rounded-circle bg-primary bg-opacity-10 p-3">
+                <span class="fs-3">🤖</span>
+            </div>
+            <div>
+                <h4 class="mb-1">AI Career Prediction</h4>
+                <p class="text-muted mb-0">
+                    Based on your current technical skills
+                </p>
+            </div>
+        </div>
+
+        <h3 class="text-primary mb-3">
+            {{ predicted_career }}
+        </h3>
+
+        <p class="text-muted">
+            This is a machine-learning prediction, not a guaranteed
+            career outcome. Review the recommendations below before
+            choosing your career path.
+        </p>
+
+        {% if prediction_probabilities %}
+        <h6 class="mt-4 mb-3">Top predicted career paths</h6>
+
+        {% for item in prediction_probabilities[:3] %}
+        <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+                <span>{{ item.career }}</span>
+                <span>{{ item.confidence }}%</span>
+            </div>
+
+            <div class="progress" style="height: 8px;">
+                <div
+                    class="progress-bar"
+                    role="progressbar"
+                    data-width="{{ item.confidence }}"
+                    style="width: 0%;"
+                    aria-valuenow="{{ item.confidence }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-info rounded-3 mb-4">
+    <strong>AI career prediction is not available yet.</strong>
+    Add technical skills to your student profile and ensure the
+    trained model file is available.
+</div>
+{% endif %}
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold"
+           href="{{ url_for('dashboard') }}">
+            CareerPilot
+        </a>
+
+        <div class="d-flex gap-3">
+            <a class="nav-link text-white"
+               href="{{ url_for('dashboard') }}">
+                Dashboard
+            </a>
+
+            <a class="nav-link text-white"
+               href="{{ url_for('explore_jobs') }}">
+                Explore Jobs
+            </a>
+
+            <a class="nav-link text-white"
+               href="{{ url_for('logout') }}">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Career Recommendations</h1>
+        <p class="text-muted">
+            Discover career paths that match your current skills
+            and identify skills to develop next.
+        </p>
+    </div>
+
+    {% if not student_skills %}
+        <div class="alert alert-info">
+            <strong>Complete your profile first.</strong>
+            Add your technical skills to receive more relevant
+            career recommendations.
+
+            <a href="{{ url_for('student_profile') }}"
+               class="alert-link">
+                Update My Profile
+            </a>
+        </div>
+    {% else %}
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="h5 fw-bold">Your Current Skills</h2>
+
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    {% for skill in student_skills %}
+                        <span class="badge rounded-pill text-bg-primary p-2">
+                            {{ skill|title }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Suggested Career Paths</h2>
+
+        <span class="text-muted">
+            {{ recommendations|length }} careers
+        </span>
+    </div>
+
+    <div class="row g-4">
+
+        {% for career in recommendations %}
+            <div class="col-12 col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+
+                        <!-- Career title and existing match badge -->
+                        <div class="d-flex justify-content-between
+                                    align-items-start gap-3">
+                            <h3 class="h5 fw-bold mb-0">
+                                {{ career.title }}
+                            </h3>
+
+                            <span class="badge
+                                {% if career.score >= 70 %}
+                                    text-bg-success
+                                {% elif career.score >= 40 %}
+                                    text-bg-warning
+                                {% else %}
+                                    text-bg-secondary
+                                {% endif %}">
+                                {{ career.score }}% match
+                            </span>
+                        </div>
+
+                        <!-- AI-predicted career badge -->
+                        {% if career.ml_match %}
+                            <div class="mt-2">
+                                <span class="badge bg-primary mb-2">
+                                    AI-predicted career
+                                </span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Combined match score -->
+                        <div class="d-flex justify-content-between
+                                    align-items-center mb-2">
+                            <span class="text-muted">
+                                Combined match score
+                            </span>
+
+                            <strong>
+                                {{ career.combined_score }}%
+                            </strong>
+                        </div>
+
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div
+                                class="progress-bar bg-success"
+                                role="progressbar"
+                                aria-valuenow="{{ career.combined_score|default(0, true) }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                style="width: 0%;"
+                                data-width="{{ career.combined_score|default(0, true) }}">
+                            </div>
+                        </div>
+
+                        <!-- Career description -->
+                        <p class="text-muted mt-2">
+                            {{ career.description }}
+                        </p>
+
+                        <!-- Existing skills progress -->
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div
+                                class="progress-bar
+                                {% if career.score >= 70 %}
+                                    bg-success
+                                {% elif career.score >= 40 %}
+                                    bg-warning
+                                {% else %}
+                                    bg-secondary
+                                {% endif %}"
+                                role="progressbar"
+                                data-progress="{{ career.score }}"
+                                aria-valuenow="{{ career.score }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100">
+                            </div>
+                        </div>
+
+                        <!-- Matched skills -->
+                        <p class="mb-2">
+                            <strong>Skills you already have</strong>
+                        </p>
+
+                        {% if career.matched %}
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                {% for skill in career.matched %}
+                                    <span class="badge text-bg-success">
+                                        {{ skill|title }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">
+                                No matching skills found yet.
+                            </p>
+                        {% endif %}
+
+                        <!-- Missing skills -->
+                        <p class="mb-2">
+                            <strong>Skills to learn</strong>
+                        </p>
+
+                        {% if career.missing %}
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                {% for skill in career.missing %}
+                                    <span class="badge text-bg-light
+                                                 border text-dark">
+                                        {{ skill|title }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-success small">
+                                You have all the skills listed for this role!
+                            </p>
+
+                        
+{% if career.missing %}
+<div class="mt-3">
+    <h6 class="fw-bold">
+        <span class="me-2">📚</span>Recommended Skills to Learn
+    </h6>
+
+    <p class="text-muted small">
+        Focus on these skills to improve your readiness for
+        {{ career.title }}.
+    </p>
+
+    <div class="d-flex flex-wrap gap-2">
+        {% for skill in career.missing %}
+        <span class="badge rounded-pill bg-warning text-dark p-2">
+            {{ skill }}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="alert alert-success mt-3 mb-0">
+    <strong>Great progress!</strong>
+    You have all the skills included in this career's current
+    matching checklist.
+</div>
+{% endif %}
+                        {% endif %}
+
+                        <!-- Skills summary -->
+                        <p class="text-muted small mb-0">
+                            {{ career.matched|length }}
+                            of {{ career.skills|length }}
+                            listed skills matched.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="mt-4 d-flex flex-wrap gap-2">
+        <a href="{{ url_for('explore_jobs') }}"
+           class="btn btn-primary">
+            Explore Jobs
+        </a>
+
+        <a href="{{ url_for('student_profile') }}"
+           class="btn btn-outline-secondary">
+            Update My Profile
+        </a>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Set progress widths for the existing career prediction bars.
+    document.querySelectorAll('[data-width]').forEach(function (bar) {
+        const value = Math.min(
+            100,
+            Math.max(0, Number(bar.dataset.width) || 0)
+        );
+
+        bar.style.width = value + '%';
+        bar.setAttribute('aria-valuenow', value);
+    });
+
+    // Set widths for the existing skills match bars.
+    document.querySelectorAll('[data-progress]').forEach(function (bar) {
+        const value = Math.min(
+            100,
+            Math.max(0, Number(bar.dataset.progress) || 0)
+        );
+
+        bar.style.width = value + '%';
+    });
+</script>
+
+</body>
+</html>

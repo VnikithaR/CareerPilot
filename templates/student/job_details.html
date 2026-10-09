@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ job["title"] }} | CareerPilot</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold"
+           href="{{ url_for('dashboard') }}">
+            CareerPilot
+        </a>
+
+        <div class="d-flex gap-3">
+            <a class="nav-link text-white"
+               href="{{ url_for('explore_jobs') }}">
+                Explore Jobs
+            </a>
+
+            <a class="nav-link text-white"
+               href="{{ url_for('logout') }}">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+
+    <a href="{{ url_for('explore_jobs') }}"
+       class="text-decoration-none">
+        &larr; Back to jobs
+    </a>
+
+    <div class="card shadow-sm border-0 mt-3">
+        <div class="card-body p-4 p-md-5">
+
+            <h1 class="fw-bold">{{ job["title"] }}</h1>
+
+            <h2 class="h5 text-primary">
+                {{ job["company"] }}
+            </h2>
+
+            <div class="row g-3 my-3">
+
+                <div class="col-md-4">
+                    <strong>Location</strong>
+                    <p>{{ job["location"] or "Not specified" }}</p>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Job type</strong>
+                    <p>{{ job["job_type"] or "Not specified" }}</p>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Experience</strong>
+                    <p>{{ job["experience"] or "Not specified" }}</p>
+                </div>
+
+            </div>
+
+            <p>
+                <strong>Salary:</strong>
+                {{ job["salary"] or "Not specified" }}
+            </p>
+
+            <hr>
+
+            <h3 class="h5">Required Skills</h3>
+
+            <p>
+                {{ job["skills_required"] or "Not specified" }}
+            </p>
+
+            <h3 class="h5 mt-4">Job Description</h3>
+
+            <p class="text-break" style="white-space: pre-line;">{{ job["description"] or "No description provided." }}</p>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+
+                <!-- Analyze My Skills Button -->
+                <a class="btn btn-primary"
+                   href="{{ url_for('analyze_job_skills', job_id=job['id']) }}">
+                    Analyze My Skills
+                </a>
+
+                <!-- Apply for Job: Opens the employer's application website -->
+                {% if job["application_url"] %}
+                    <a class="btn btn-outline-primary"
+                       href="{{ job['application_url'] }}"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Apply for Job
+                    </a>
+                {% endif %}
+
+                <!-- Track My Application: Saves the job to CareerPilot's tracker -->
+                <form method="POST"
+                      action="{{ url_for('track_job_application', job_id=job['id']) }}">
+
+                    <button type="submit" class="btn btn-success">
+                        Track My Application
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>
